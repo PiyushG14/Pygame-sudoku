@@ -1,16 +1,42 @@
-#api call and populating the grid
+#Taking user input
+
 import pygame
 import requests
 
 WIDTH = 550
 background_color = (251,247,245)
 orignal_grid_element_color = (52, 31, 151)
-
+buffer = 5
 
 response = requests.get("https://sugoku.herokuapp.com/board?difficulty=easy")
 grid = response.json()['board']
 grid_original = [[grid[x][y] for y in range(len(grid[0]))] for x in range(len(grid))]
 
+def insert(win, position):
+    i,j = position[1], position[0]
+    myfont = pygame.font.SysFont('Comic Sans MS', 35)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.KEYDOWN: 
+                if event.key == 48:   #For clearing
+                    pygame.draw.rect(win, background_color, (position[0]*50+buffer, position[1]*50+buffer, 50-buffer,50 -buffer))
+                    pygame.display.update()
+                    grid[i-1][j-1] = event.key - 48
+                    return
+                if(0 < event.key - 48 < 10):
+                    #If original grid is already set,don't change anything
+                    if(grid_original[i-1][j-1] != 0):
+                        return
+                    #If new change is being repeated, change the value
+                    if(grid[i-1][j-1] != 0):
+                        pygame.draw.rect(win, background_color, (position[0]*50+buffer, position[1]*50+buffer, 50-buffer,50 -buffer))
+                    value = myfont.render(str(event.key - 48), True, (0, 0, 0)) 
+                    win.blit(value, (position[0]*50 + 15 ,position[1]*50 ) )  
+                    grid[i-1][j-1] = event.key - 48
+                    pygame.display.update()
+                return
 
 
 def main():    
@@ -35,14 +61,21 @@ def main():
             if(0 < grid[i][j] < 10 ):
                 value = myfont.render(str(grid[i][j]), True, orignal_grid_element_color) 
                 win.blit(value, ((j+1)*50 + 15 ,(i+1)*50 )) 
+                #x coordinate would basically be the second index of the 2darray
             
     pygame.display.update()
     
     
     while True: 
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                insert(win, (pos[0]//50, pos[1]//50))  #Passing the index
+                
             if event.type == pygame.QUIT:
                 pygame.quit()
+                for i in range(0, len(grid)):
+                    print(grid[i],grid_original[i])
                 return
    
 main()
