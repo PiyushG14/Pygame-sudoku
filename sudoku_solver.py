@@ -10,29 +10,17 @@ response = requests.get("https://sugoku.herokuapp.com/board?difficulty=easy")
 grid = response.json()['board']
 grid_original = [[grid[x][y] for y in range(len(grid[0]))] for x in range(len(grid))]
 
-def insert(win, position):
-    i,j = position[1], position[0]
-    myfont = pygame.font.SysFont('Comic Sans MS', 35)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-            if event.type == pygame.KEYDOWN:
-                if(grid_original[i-1][j-1] != 0):
-                    return
-                if(event.key == 48): #checking with 0
-                    grid[i-1][j-1] = event.key - 48
-                    pygame.draw.rect(win, background_color, (position[0]*50 + buffer, position[1]*50+ buffer,50 -2*buffer , 50 - 2*buffer))
-                    pygame.display.update()
-                    return
-                if(0 < event.key - 48 <10):  #We are checking for valid input
-                    pygame.draw.rect(win, background_color, (position[0]*50 + buffer, position[1]*50+ buffer,50 -2*buffer , 50 - 2*buffer))
-                    value = myfont.render(str(event.key-48), True, (0,0,0))
-                    win.blit(value, (position[0]*50 +15, position[1]*50))
-                    grid[i-1][j-1] = event.key - 48
-                    pygame.display.update()
-                    return
-                return
+
+def isEmpty(num):
+    if num == 0:
+        return True
+    return False
+
+def isValid():
+    pass
+
+def sudoku_solver():
+    pass
         
 
 
@@ -62,9 +50,6 @@ def main():
         
     while True: 
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                pos = pygame.mouse.get_pos()
-                insert(win, (pos[0]//50, pos[1]//50))
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
