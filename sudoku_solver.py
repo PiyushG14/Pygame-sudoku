@@ -63,7 +63,7 @@ def sudoku_solver(win):
                         if(solved == 1):
                             return
                         
-                        #if solve sudoky returns, there's a mismatch
+                        #if sudoku_solver returns, there's a mismatch
                         grid[i][j] = 0
                         pygame.draw.rect(win, background_color, ((j+1)*50 + buffer, (i+1)*50+ buffer,50 -2*buffer , 50 - 2*buffer))
                         pygame.display.update()
