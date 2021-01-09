@@ -41,9 +41,35 @@ def isValid(position, num):
     return True
 
 
-
-def sudoku_solver():
-    pass
+solved = 0
+def sudoku_solver(win):
+    myfont = pygame.font.SysFont('Comic Sans MS', 35)
+    for i in range(0,len(grid[0])):
+        for j in range(0, len(grid[0])):
+            if(isEmpty(grid[i][j])): 
+                for k in range(1,10):
+                    if isValid((i,j), k):                   
+                        grid[i][j] = k
+                        pygame.draw.rect(win, background_color, ((j+1)*50 + buffer, (i+1)*50+ buffer,50 -2*buffer , 50 - 2*buffer))
+                        value = myfont.render(str(k), True, (0,0,0))
+                        win.blit(value, ((j+1)*50 +15,(i+1)*50))
+                        pygame.display.update()
+                        pygame.time.delay(25)
+                        
+                        sudoku_solver(win)
+                        
+                        #Exit condition
+                        global solved
+                        if(solved == 1):
+                            return
+                        
+                        #if solve sudoky returns, there's a mismatch
+                        grid[i][j] = 0
+                        pygame.draw.rect(win, background_color, ((j+1)*50 + buffer, (i+1)*50+ buffer,50 -2*buffer , 50 - 2*buffer))
+                        pygame.display.update()
+                        #pygame.time.delay(50)
+                return               
+    solved = 1
         
 
 
@@ -70,7 +96,7 @@ def main():
                 win.blit(value, ((j+1)*50 + 15, (i+1)*50 ))
     pygame.display.update()
             
-        
+    sudoku_solver(win)
     while True: 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
