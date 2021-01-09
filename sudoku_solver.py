@@ -16,8 +16,31 @@ def isEmpty(num):
         return True
     return False
 
-def isValid():
-    pass
+def isValid(position, num):
+     #Check for Column, row and sub-grid
+    
+    #Checking row
+    for i in range(0, len(grid[0])):
+        if(grid[position[0]][i] == num):
+            return False
+    
+    #Checking column
+    for i in range(0, len(grid[0])):
+        if(grid[i][position[1]] == num):
+            return False
+    
+    #Check sub-grid  
+    x = position[0]//3*3
+    y = position[1]//3*3
+    #Gives us the box number
+    
+    for i in range(0,3):
+        for j in range(0,3):
+            if(grid[x+i][y+j]== num):
+                return False
+    return True
+
+
 
 def sudoku_solver():
     pass
